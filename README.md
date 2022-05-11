@@ -60,3 +60,56 @@ No modules.
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | The ID of the PostgreSQL Server. |
 | <a name="output_id"></a> [id](#output\_id) | The ID of the PostgreSQL Server. |
 <!-- END_TF_DOCS -->
+
+## How to use
+
+```
+provider "azurerm" {
+features {}
+}
+
+module "postgresql-server" {
+  source  = "spy86/postgresql-server/azure"
+  version = "1.0.0"
+  database_name = ["database01", "database02"]
+  postgresql_administrator_login_password = "P@ssw0rd_123"
+  postgresql_name = "640e409e"
+  resource_group_name = "weu-test-rg"
+  resource_group_location = "West Europe"
+  database_charset = "UTF8"
+  database_collation = "English_United States.1252"
+  database_enabled = "true"
+  environment= "dev"
+  firewall_rules = {
+    firewall_rule01 = {
+      name = "TestRule01"
+      start_ip  = ["10.0.0.5"]
+      end_ip = ["10.0.0.10"]
+    }
+    firewall_rule02 = {
+      name = "TestRule02"
+      start_ip  = ["127.0.0.0"]
+      end_ip = ["127.0.1.0"]
+    }
+  }
+  postgresql_administrator_login = "postgreadm"
+  postgresql_auto_grow_enabled = "true"
+  postgresql_backup_retention_days = "7"
+  postgresql_geo_redundant_backup_enabled = "false"
+  postgresql_public_network_access_enabled= "false"
+  postgresql_sku_name = "GP_Gen5_4"
+  postgresql_ssl_enforcement_enabled = "true"
+  postgresql_ssl_minimal_tls_version_enforced = "TLS1_2"
+  postgresql_storage_mb = "102400"
+  postgresql_version = "9.6"
+  region= "weu"
+
+  default_tags = {
+      Administrator = "Someone"
+      Department = "IT"
+      CostCentre = "ABC123"
+      ContactPerson = "Someone@example.com"
+      ManagedByTerraform = "True"
+}
+}
+```

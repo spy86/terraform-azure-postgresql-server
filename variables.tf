@@ -109,18 +109,12 @@ variable "database_collation" {
   default = "English_United States.1252"
 }
 variable "firewall_rules" {
-  description = "Manages a Firewall Rule for a PostgreSQL Server."
-  type = map(any)
-  default = {
-    firewall_rule01 = {
-      name = "TestRule01"
-      start_ip  = ["10.0.0.5"]
-      end_ip = ["10.0.0.10"]
-    }
-    firewall_rule02 = {
-      name = "TestRule02"
-      start_ip  = ["127.0.0.0"]
-      end_ip = ["127.0.1.0"]
-    }
-  }
+  description = "Manages a Firewall Rule for a PostgreSQL Server. The list of maps, describing firewall rules. Valid map items: name, start_ip, end_ip."
+  type        = list(map(string))
+  default     = []
+}
+variable "firewall_rule_prefix" {
+  description = "Specifies prefix for firewall rule names."
+  type        = string
+  default     = "firewall-rule-"
 }
