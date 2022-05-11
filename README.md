@@ -36,7 +36,8 @@ No modules.
 | <a name="input_database_name"></a> [database\_name](#input\_database\_name) | The name of the Databases which should be created within the PostgreSQL Server. | `set(string)` | n/a | yes |
 | <a name="input_default_tags"></a> [default\_tags](#input\_default\_tags) | A mapping of tags to assign to the resource. | `map` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Var used for backend container name key | `string` | `"dev"` | no |
-| <a name="input_firewall_rules"></a> [firewall\_rules](#input\_firewall\_rules) | Manages a Firewall Rule for a PostgreSQL Server. | `map(any)` | <pre>{<br>  "firewall_rule01": {<br>    "end_ip": [<br>      "10.0.0.10"<br>    ],<br>    "name": "TestRule01",<br>    "start_ip": [<br>      "10.0.0.5"<br>    ]<br>  },<br>  "firewall_rule02": {<br>    "end_ip": [<br>      "127.0.1.0"<br>    ],<br>    "name": "TestRule02",<br>    "start_ip": [<br>      "127.0.0.0"<br>    ]<br>  }<br>}</pre> | no |
+| <a name="input_firewall_rule_prefix"></a> [firewall\_rule\_prefix](#input\_firewall\_rule\_prefix) | Specifies prefix for firewall rule names. | `string` | `"firewall-rule-"` | no |
+| <a name="input_firewall_rules"></a> [firewall\_rules](#input\_firewall\_rules) | Manages a Firewall Rule for a PostgreSQL Server. The list of maps, describing firewall rules. Valid map items: name, start\_ip, end\_ip. | `list(map(string))` | `[]` | no |
 | <a name="input_postgresql_administrator_login"></a> [postgresql\_administrator\_login](#input\_postgresql\_administrator\_login) | The Administrator login for the PostgreSQL Server. Required when create\_mode is Default. Changing this forces a new resource to be created. | `string` | `"postgreadm"` | no |
 | <a name="input_postgresql_administrator_login_password"></a> [postgresql\_administrator\_login\_password](#input\_postgresql\_administrator\_login\_password) | The Password associated with the administrator\_login for the PostgreSQL Server. Required when create\_mode is Default. | `string` | n/a | yes |
 | <a name="input_postgresql_auto_grow_enabled"></a> [postgresql\_auto\_grow\_enabled](#input\_postgresql\_auto\_grow\_enabled) | Enable/Disable auto-growing of the storage. Storage auto-grow prevents your server from running out of storage and becoming read-only. If storage auto grow is enabled, the storage automatically grows without impacting the workload. The default value if not explicitly specified is true. | `string` | `"true"` | no |
@@ -61,6 +62,7 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | The ID of the PostgreSQL Server. |
 <!-- END_TF_DOCS -->
 
+
 ## How to use
 
 ```
@@ -70,7 +72,7 @@ features {}
 
 module "postgresql-server" {
   source  = "spy86/postgresql-server/azure"
-  version = "1.0.0"
+  version = "1.0.1"
   database_name = ["database01", "database02"]
   postgresql_administrator_login_password = "P@ssw0rd_123"
   postgresql_name = "640e409e"
@@ -80,18 +82,11 @@ module "postgresql-server" {
   database_collation = "English_United States.1252"
   database_enabled = "true"
   environment= "dev"
-  firewall_rules = {
-    firewall_rule01 = {
-      name = "TestRule01"
-      start_ip  = ["10.0.0.5"]
-      end_ip = ["10.0.0.10"]
-    }
-    firewall_rule02 = {
-      name = "TestRule02"
-      start_ip  = ["127.0.0.0"]
-      end_ip = ["127.0.1.0"]
-    }
-  }
+  firewall_rule_prefix = "firewall-rule-"
+  firewall_rules = [
+    { name = "rule01", start_ip = "10.0.0.5", end_ip = "10.0.0.8" },
+    { start_ip = "127.0.0.0", end_ip = "127.0.1.0" },
+  ]
   postgresql_administrator_login = "postgreadm"
   postgresql_auto_grow_enabled = "true"
   postgresql_backup_retention_days = "7"
