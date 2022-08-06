@@ -9,5 +9,5 @@ resource "azurerm_postgresql_database" "main" {
   charset             = "${var.database_charset}"
   collation           = "${var.database_collation}"
 
-depends_on = [ "azurerm_postgresql_server.main" ]
+depends_on = [ azurerm_postgresql_server.main ]
 }

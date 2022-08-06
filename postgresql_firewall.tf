@@ -6,5 +6,5 @@ resource "azurerm_postgresql_firewall_rule" "main" {
   start_ip_address    = var.firewall_rules[count.index]["start_ip"]
   end_ip_address      = var.firewall_rules[count.index]["end_ip"]
 
-depends_on = [ "azurerm_postgresql_server.main" ]
+depends_on = [ azurerm_postgresql_server.main ]
 }
